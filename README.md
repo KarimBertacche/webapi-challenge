@@ -27,12 +27,15 @@ Demonstrate your understanding of this Sprint's concepts by answering the follow
 - [ ] Mention two parts of Express that you learned about this week.
 
 - [ ] Describe Middleware?
+Middlewares are functions that intercept http request and can perform action based on those requests, example of middlewares are the commonly used CRUD methods that we use to deal with, whenever we use '.use()' whatever we place within the parenthesis is a piece of middleware.
+Middlewares can be on three types, built in middleware like the .json for parsing the body of a request, third parties middleware which we install as dependencies and then import before invoking them to use them with the '.use()' method, and costum middlewares which we create ourselves which take as parameters a request, response, and next to continue to the next action/function.
 
 - [ ] Describe a Resource?
 
 - [ ] What can the API return to help clients know if a request was successful?
 
 - [ ] How can we partition our application into sub-applications?
+By using 'server.Router()' and separate ... 
 
 ## Project Setup
 
