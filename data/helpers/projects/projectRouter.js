@@ -20,7 +20,7 @@ router.get('/:id', validateById, async (req, res) => {
     res.status(200).json(req.project);
 });
 
-router.get('/actions/:id', async (req, res) => {
+router.get('/actions/:id', validateById, async (req, res) => {
     try {
         const { id } = req.params;
         const actions = await dbProjects.getProjectActions(id);
@@ -52,7 +52,7 @@ router.post('/', async (req, res) => {
     }
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', validateById, async (req, res) => {
     try {
         const { id } = req.params;
         const changes = req.body;
@@ -74,7 +74,7 @@ router.put('/:id', async (req, res) => {
     }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', validateById, async (req, res) => {
     try {
         const { id } = req.params;
         const deleted = await dbProjects.remove(id);
@@ -91,14 +91,21 @@ router.delete('/:id', async (req, res) => {
 async function validateById(req, res, next) {
     try {
         const { id } = req.params;
-        const project = await dbProjects.gets(id);
 
-        if(project) {
-            req.project = project;
-            next();
+        if(!isNaN(parseInt(id))) {
+            const project = await dbProjects.get(id);
+    
+            if(project) {
+                req.project = project;
+                next();
+            } else {
+                res.status(404).json({
+                    message: 'Project not found, invalid Id'
+                });
+            }
         } else {
-            res.status(404).json({
-                message: 'Project not found, invalid Id'
+            res.status(400).json({
+                message: 'Id is not a number'
             });
         }
     } catch(error) {
