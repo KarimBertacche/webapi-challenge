@@ -48,11 +48,18 @@ const StylesApp = styled.div`
   }
 
   .action-wrapper {
-    display: flex;
     justify-content: center;
     width: 100%;
     height: 50px;
     border-top: 3px solid dodgerblue;
+
+    &.hide {
+      display: none;
+    }
+
+    &.show {
+      display: flex;
+    }
   }
 
 `;
@@ -61,7 +68,8 @@ class App extends React.Component {
   state = {
     projects: null,
     actions: null,
-    toggleAction: false
+    toggleAction: false,
+    toggletext: 'Show actions'
   }
 
   componentDidMount() {
@@ -93,9 +101,15 @@ class App extends React.Component {
   toggleActionHandler = (id) => {
     this.getActionsHandler(id);
     if(this.state.toggleAction === false) {
-      this.setState({ toggleAction: true });
+      this.setState({ 
+        toggleAction: true,
+        toggletext: 'Hide actions'
+      });
     } else {
-      this.setState({ toggleAction: false });
+      this.setState({ 
+        toggleAction: false,
+        toggletext: 'Show actions'
+      });
     }
   }
 
@@ -109,14 +123,17 @@ class App extends React.Component {
                 <div className="project-wrapper">
                   <h2>{project.name}</h2>
                   <p>{project.description}</p>
-                  <button onClick={() => this.toggleActionHandler(project.id)}>Show details</button>
+                  <button 
+                    onClick={() => this.toggleActionHandler(project.id)}
+                  >{this.state.toggletext}</button>
                   {
                     this.state.actions
                     ? this.state.actions.map(action => {
                         return (
                           <div 
-                            className="action-wrapper" 
-                            // style={this.state.toggleAction ? 'display: flex' : 'display: none'}
+                            className={
+                              this.state.toggleAction 
+                            ? 'action-wrapper show' : 'action-wrapper hide'}
                           >
                             <p>{action.description}</p>
                             <p>{action.note}</p>
