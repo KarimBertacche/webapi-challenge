@@ -1,6 +1,9 @@
 const server = require('./server');
+const helmet = require('helmet');
 
 const port = 4000;
+
+server.use(helmet());
 
 server.listen(port, () => {
     console.log(`/n*** Server running on port ${port} ***/n`);
