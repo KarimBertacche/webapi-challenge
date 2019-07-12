@@ -16,7 +16,7 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.post('/:id', async (req, res) => {
+router.post('/:id', validateDescription, async (req, res) => {
     try {
         const newAction = { ...req.body, project_id: req.params.id };
         
@@ -36,7 +36,7 @@ router.post('/:id', async (req, res) => {
     }
 });
 
-router.put('/:id', validateById, async (req, res) => {
+router.put('/:id', [ validateById, validateDescription ], async (req, res) => {
     try {
         const { id } = req.params;
         const changes = req.body;
@@ -99,8 +99,21 @@ async function validateById(req, res, next) {
     }
 };
 
-async function validateBodyRequest(req, res, next) {
+function validateDescription(req, res, next) {
     try {
+        const { body } = req;
+
+        if(body.description.length > 0 && body.description.length <= 128) {
+            next()
+        } else if(body.description === '') {
+            res.status(400).json({
+                message: 'Description is undefined'
+            });
+        } else {
+            res.status(400).json({
+                message: 'Description exceeds 128 characters'
+            }); 
+        }
 
     } catch(error) {
         res.status(500).json({
